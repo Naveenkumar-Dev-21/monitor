@@ -114,17 +114,59 @@ def get_diff_summary(old_text, new_text):
                 
     return added, removed
 
-def monitor_public_site():
-    """Monitors the public website for updates."""
-    print(f"Checking public website: {PUBLIC_TARGET_URL}")
-    state_file = "state_public.txt"
+def fetch_url_with_proxy(url):
+    """Attempts to fetch the URL directly, and falls back to free Indian proxies if geoblocked/timed out."""
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
     }
     
+    # Try direct connection first
     try:
-        r = requests.get(PUBLIC_TARGET_URL, headers=headers, timeout=20)
+        print(f"Attempting direct connection to {url}")
+        r = requests.get(url, headers=headers, timeout=10)
         r.raise_for_status()
+        return r
+    except Exception as direct_err:
+        print(f"Direct connection failed (possibly geoblocked): {direct_err}")
+        
+    # If direct connection fails, try using free Indian proxies
+    print("Attempting to bypass using free Indian proxies...")
+    proxy_api_url = "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&protocol=http&proxy_format=ipport&format=text&country=in"
+    try:
+        proxy_resp = requests.get(proxy_api_url, timeout=10)
+        if proxy_resp.status_code == 200:
+            proxies_list = [line.strip() for line in proxy_resp.text.splitlines() if line.strip()]
+            print(f"Found {len(proxies_list)} potential Indian proxies.")
+            
+            # Try top 10 proxies from the list
+            for proxy in proxies_list[:10]:
+                proxy_dict = {
+                    "http": f"http://{proxy}",
+                    "https": f"http://{proxy}"
+                }
+                print(f"Trying Indian proxy: {proxy}")
+                try:
+                    r = requests.get(url, headers=headers, proxies=proxy_dict, timeout=7)
+                    r.raise_for_status()
+                    print(f"Successfully connected via proxy: {proxy}")
+                    return r
+                except Exception as proxy_err:
+                    print(f"Proxy {proxy} failed: {proxy_err}")
+        else:
+            print(f"Failed to fetch proxy list. HTTP Status: {proxy_resp.status_code}")
+    except Exception as e:
+        print(f"Error fetching proxy list: {e}")
+        
+    # If everything fails, raise the original direct connection error
+    raise direct_err
+
+def monitor_public_site():
+    """Monitors the public website for updates."""
+    print(f"Checking public website: {PUBLIC_TARGET_URL}")
+    state_file = "state_public.txt"
+    
+    try:
+        r = fetch_url_with_proxy(PUBLIC_TARGET_URL)
     except Exception as e:
         print(f"Error requesting public target URL: {e}")
         return
