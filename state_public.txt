@@ -1,28 +1,4 @@
-Results - COE || KEC
-For Contact :
-04294 - 226645, 226625
-||
-coe@kongu.ac.in
-End Semester Examinations Results - April / May 2026
-* Last Date to Apply for Photocopy of the Answer Scripts is
-and for Revaluation
-Results Published for:
-1. BE/BTech - 2022 Batch (Only for the students who have arrears upto the Pre-Final Semesters)
-2. BE/BTech - 2023 & 2024 Batches (For 2024 Batch, Results Published only for the students who have no arrears in 1
-st
-and 2
-nd
-semester)
-3. MSc - 2022, 2023 & 2024 Batches
-4. BSc - 2024 Batch
-MBA (2024 Batch - Regular Courses)
-(The result is published only for the students who have no arrears upto the Pre-Final Trimester)
-Revaluation Results - BSc Arrear (2020 & 2022 Regulations)
-BSc Arrear Results (2020 & 2022 Regulations)
-Final Semester Results
-(The result is published only for the students who have no arrears upto the Pre-Final Semesters)
-Revaluation Results
-PhD Results
-MBA Trimester
-Previous Semester Results (Regular Students Only)
-Site Designed and Maintain by : Programming Team - COE || KEC
+{
+  "scoresPublished": false,
+  "winnersPublished": false
+}

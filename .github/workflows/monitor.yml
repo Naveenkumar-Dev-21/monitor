@@ -33,21 +33,14 @@ jobs:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           PUBLIC_TARGET_URL: ${{ secrets.PUBLIC_TARGET_URL }}
-          PORTAL_LOGIN_URL: ${{ secrets.PORTAL_LOGIN_URL }}
-          PORTAL_TARGET_URL: ${{ secrets.PORTAL_TARGET_URL }}
-          PORTAL_USERNAME: ${{ secrets.PORTAL_USERNAME }}
-          PORTAL_PASSWORD: ${{ secrets.PORTAL_PASSWORD }}
-          PORTAL_USERNAME_FIELD: ${{ secrets.PORTAL_USERNAME_FIELD }}
-          PORTAL_PASSWORD_FIELD: ${{ secrets.PORTAL_PASSWORD_FIELD }}
-          PORTAL_PAYLOAD_FORMAT: ${{ secrets.PORTAL_PAYLOAD_FORMAT }}
-        run: python monitor.py --public
+        run: python monitor.py
 
       - name: Commit and push state changes
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           # Add state files if they exist/changed
-          git add state_public.txt state_portal.txt 2>/dev/null || true
+          git add state_public.txt 2>/dev/null || true
           # Commit only if there are changes to commit, otherwise exit cleanly
           if ! git diff --cached --quiet; then
             git commit -m "Update monitor state baseline [skip ci]"
